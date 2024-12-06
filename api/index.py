@@ -5,14 +5,14 @@ from pathlib import Path
 
 # Update template and static folders configuration
 template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'templates'))
-static_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'public', 'static'))
+static_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'public'))
 
 app = Flask(__name__, 
     template_folder=template_dir,
     static_folder=static_dir,
-    static_url_path='/static')
+    static_url_path='')
 
-# Game data organized by difficulty with updated image paths
+# Update game data with correct image paths
 game_data = {
     'easy': [
         {"image": "static/images/python_logo.jpg", "word": "PYTHON"},
@@ -22,18 +22,18 @@ game_data = {
         {"image": "static/images/function_diagram.jpg", "word": "FUNCTION"},
     ],
     'average': [
-        {"image": "/static/images/javascript_logo.jpg", "word": "JAVASCRIPT"},
-        {"image": "/static/images/database_diagram.jpg", "word": "DATABASE"},
-        {"image": "/static/images/algorithm_flow.jpg", "word": "ALGORITHM"},
-        {"image": "/static/images/react_logo.jpg", "word": "REACT"},
-        {"image": "/static/images/docker_logo.jpg", "word": "DOCKER"},
+        {"image": "static/images/javascript_logo.jpg", "word": "JAVASCRIPT"},
+        {"image": "static/images/database_diagram.jpg", "word": "DATABASE"},
+        {"image": "static/images/algorithm_flow.jpg", "word": "ALGORITHM"},
+        {"image": "static/images/react_logo.jpg", "word": "REACT"},
+        {"image": "static/images/docker_logo.jpg", "word": "DOCKER"},
     ],
     'hard': [
-        {"image": "/static/images/kubernetes_arch.jpg", "word": "KUBERNETES"},
-        {"image": "/static/images/microservices.jpg", "word": "MICROSERVICES"},
-        {"image": "/static/images/blockchain.jpg", "word": "BLOCKCHAIN"},
-        {"image": "/static/images/machine_learning.jpg", "word": "MACHINELEARNING"},
-        {"image": "/static/images/cryptography.jpg", "word": "CRYPTOGRAPHY"},
+        {"image": "static/images/kubernetes_arch.jpg", "word": "KUBERNETES"},
+        {"image": "static/images/microservices.jpg", "word": "MICROSERVICES"},
+        {"image": "static/images/blockchain.jpg", "word": "BLOCKCHAIN"},
+        {"image": "static/images/machine_learning.jpg", "word": "MACHINELEARNING"},
+        {"image": "static/images/cryptography.jpg", "word": "CRYPTOGRAPHY"},
     ]
 }
 
@@ -119,10 +119,10 @@ def check():
     except Exception as e:
         return jsonify({"correct": False, "message": str(e)}), 500
 
-# Add a route for serving static files
-@app.route('/static/<path:path>')
-def serve_static(path):
-    return send_from_directory(static_dir, path)
+# Add static file serving route
+@app.route('/static/<path:filename>')
+def serve_static(filename):
+    return send_from_directory(static_dir, filename)
 
 if __name__ == '__main__':
     app.run() 
