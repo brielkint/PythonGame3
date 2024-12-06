@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programming Word Game</title>
+    <style>
+        body {
+            font-family: "Courier New", monospace;
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            text-align: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        img {
+            border: 1px solid #3c3c3c;
+            margin-bottom: 20px;
+            max-width: 300px;
+            height: auto;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .scrambled-letters {
+            font-size: 24px;
+            margin: 20px 0;
+            color: #569cd6;
+            letter-spacing: 3px;
+        }
+        input[type="text"] {
+            font-size: 18px;
+            padding: 10px;
+            background: #252526;
+            color: #d4d4d4;
+            border: 1px solid #3c3c3c;
+            width: 300px;
+            text-transform: uppercase;
+        }
+        button {
+            font-size: 16px;
+            padding: 10px 20px;
+            background-color: #007acc;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+        button:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+        }
+        button:hover:not(:disabled) {
+            background-color: #005999;
+        }
+        #loader {
+            display: none;
+            font-size: 20px;
+            color: #007acc;
+            margin: 20px 0;
+        }
+        #result {
+            font-size: 18px;
+            margin-top: 20px;
+            min-height: 24px;
+        }
+        #next-btn {
+            display: none;
+            background-color: #28a745;
+        }
+        #next-btn:hover {
+            background-color: #218838;
+        }
+        .game-progress {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 16px;
+            color: #007acc;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-progress">Question: <span id="current-question">1</span>/<span id="total-questions">5</span></div>
+    <h1>Programming Word Game</h1>
+    <img id="image" src="" alt="Programming Image">
+    <div class="scrambled-letters" id="scrambled"></div>
+    <input type="text" id="guess" placeholder="Your Guess" maxlength="20">
+    <button id="submit-btn" onclick="checkAnswer()">Submit</button>
+    <div id="result"></div>
+    <div id="loader">Loading next question...</div>
+    <button id="next-btn" onclick="fetchNextQuestion()">Next Question</button>
+
+    <script>
+        let gameData = [];
+        let questionIndex = 0;
+        let totalQuestions = 0;
+
+        function updateProgress() {
+            document.getElementById('current-question').textContent = questionIndex + 1;
+            document.getElementById('total-questions').textContent = totalQuestions;
+        }
+
+        function checkAnswer() {
+            const guessInput = document.getElementById('guess');
+            const guess = guessInput.value.trim();
+            const correctWord = gameData[questionIndex].correct_word;
+
+            if (guess === "") {
+                showResult("Please enter your answer!", false);
+                return;
+            }
+
+            const submitButton = document.getElementById('submit-btn');
+            submitButton.disabled = true;
+
+            fetch('/check', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    guess: guess,
+                    correct_word: correctWord
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                showResult(data.message, data.correct);
+                if (data.correct) {
+                    document.getElementById('next-btn').style.display = 'block';
+                    guessInput.disabled = true;
+                }
+                submitButton.disabled = false;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showResult("An error occurred. Please try again.", false);
+                submitButton.disabled = false;
+            });
+        }
+
+        function showResult(message, isCorrect) {
+            const result = document.getElementById('result');
+            result.textContent = message;
+            result.style.color = isCorrect ? "#28a745" : "#dc3545";
+        }
+
+        function fetchNextQuestion() {
+            if (questionIndex >= gameData.length - 1) {
+                alert("Congratulations! You've completed all questions!");
+                window.location.href = '/';
+                return;
+            }
+
+            questionIndex++;
+            updateProgress();
+            
+            const currentQuestion = gameData[questionIndex];
+            document.getElementById('image').src = `/static/images/${currentQuestion.image}`;
+            document.getElementById('scrambled').textContent = currentQuestion.scrambled;
+            
+            const guessInput = document.getElementById('guess');
+            guessInput.value = '';
+            guessInput.disabled = false;
+            guessInput.focus();
+            
+            document.getElementById('result').textContent = '';
+            document.getElementById('next-btn').style.display = 'none';
+        }
+
+        function startGame() {
+            fetch('/game', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    gameData = data;
+                    totalQuestions = data.length;
+                    questionIndex = 0;
+                    updateProgress();
+                    
+                    const currentQuestion = gameData[0];
+                    document.getElementById('image').src = `/static/images/${currentQuestion.image}`;
+                    document.getElementById('scrambled').textContent = currentQuestion.scrambled;
+                    
+                    document.getElementById('guess').focus();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showResult("Failed to start game. Please refresh the page.", false);
+                });
+        }
+
+        // Handle Enter key press
+        document.getElementById('guess').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                if (!this.disabled) {
+                    checkAnswer();
+                }
+            }
+        });
+
+        // Start the game when page loads
+        window.onload = startGame;
+    </script>
+</body>
+</html>

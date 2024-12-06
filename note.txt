@@ -1,0 +1,29 @@
+Programming Word Game Answers
+===========================
+
+EASY LEVEL
+----------
+1. PYTHON
+2. HTML
+3. CSS
+4. BINARY
+5. FUNCTION
+
+AVERAGE LEVEL
+------------
+1. JAVASCRIPT
+2. DATABASE
+3. ALGORITHM
+4. REACT
+5. DOCKER
+
+HARD LEVEL
+----------
+1. KUBERNETES
+2. MICROSERVICES
+3. BLOCKCHAIN
+4. MACHINELEARNING
+5. CRYPTOGRAPHY
+
+Note: All answers should be entered in UPPERCASE letters.
+The words will be scrambled randomly in the game, but these are the correct unscrambled answers. 

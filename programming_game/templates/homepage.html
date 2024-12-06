@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programming Word Game</title>
+    <style>
+        body {
+            font-family: "Courier New", monospace;
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            text-align: center;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #007acc;
+            margin-bottom: 30px;
+        }
+        p {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+        button {
+            font-size: 20px;
+            padding: 15px 40px;
+            background-color: #007acc;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #005999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Programming Word Game!</h1>
+        <p>Test your programming knowledge by unscrambling words related to programming concepts. Can you solve all the puzzles?</p>
+        <form action="/game">
+            <button type="submit">Start Game</button>
+        </form>
+    </div>
+</body>
+</html>

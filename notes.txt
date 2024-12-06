@@ -1,0 +1,6 @@
+images/
+│   {"image": "python_logo.jpg", "word": "PYTHON"},
+    {"image": "html_logo.png", "word": "HTML"},
+    {"image": "css_code_snippet.jpg", "word": "CSS"},
+    {"image": "binary_code.jpg", "word": "BINARY"},
+    {"image": "function_diagram.jpg", "word": "FUNCTION"},
