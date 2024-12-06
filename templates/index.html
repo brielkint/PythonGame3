@@ -4,107 +4,318 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Programming Word Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #1a1a2e;
+            --secondary-color: #16213e;
+            --accent-color: #0f3460;
+            --text-color: #e94560;
+            --light-text: #ffffff;
+        }
+
+        /* Base styles for all screen sizes */
         body {
-            font-family: "Courier New", monospace;
-            background-color: #1e1e1e;
-            color: #d4d4d4;
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: #fff;
             text-align: center;
-            padding: 20px;
+            padding: 10px;
+            margin: 0;
+            min-height: 100vh;
             overflow-x: hidden;
         }
+
+        .game-container {
+            max-width: min(800px, 95%);
+            margin: 0 auto;
+            padding: clamp(15px, 3vw, 30px);
+            background: rgba(15, 52, 96, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: clamp(10px, 2vw, 20px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        h1 {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            margin: clamp(10px, 2vh, 30px) 0;
+        }
+
+        /* Responsive image container */
+        .image-container {
+            width: min(400px, 90%);
+            margin: 20px auto;
+            aspect-ratio: 16/9;
+            position: relative;
+        }
+
         img {
-            border: 1px solid #3c3c3c;
-            margin-bottom: 20px;
-            max-width: 300px;
-            height: auto;
-            opacity: 1;
-            transition: opacity 0.5s ease-in-out;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: clamp(8px, 2vw, 15px);
+            margin: 0;
+            transition: transform 0.3s ease;
         }
+
+        /* Responsive text elements */
         .scrambled-letters {
-            font-size: 24px;
-            margin: 20px 0;
-            color: #569cd6;
-            letter-spacing: 3px;
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            margin: clamp(15px, 3vh, 30px) 0;
+            letter-spacing: clamp(3px, 1vw, 8px);
         }
+
         input[type="text"] {
-            font-size: 18px;
-            padding: 10px;
-            background: #252526;
-            color: #d4d4d4;
-            border: 1px solid #3c3c3c;
-            width: 300px;
-            text-transform: uppercase;
+            width: min(300px, 80%);
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            padding: clamp(8px, 2vw, 15px);
         }
+
         button {
-            font-size: 16px;
-            padding: 10px 20px;
-            background-color: #007acc;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: background-color 0.3s ease;
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            padding: clamp(8px, 2vw, 12px) clamp(15px, 4vw, 30px);
+            margin: clamp(5px, 1vw, 10px);
+            width: min(200px, 80%);
         }
-        button:disabled {
-            background-color: #555;
-            cursor: not-allowed;
+
+        /* Responsive game info displays */
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 0 clamp(10px, 2vw, 20px);
         }
-        button:hover:not(:disabled) {
-            background-color: #005999;
+
+        .timer, .game-progress, .score-display {
+            position: static;
+            background: rgba(255, 255, 255, 0.2);
+            padding: clamp(5px, 1.5vw, 10px) clamp(10px, 2vw, 20px);
+            border-radius: 20px;
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            backdrop-filter: blur(5px);
+            flex: 1;
+            min-width: max-content;
         }
-        #loader {
-            display: none;
-            font-size: 20px;
-            color: #007acc;
-            margin: 20px 0;
-        }
+
         #result {
-            font-size: 18px;
-            margin-top: 20px;
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            margin: clamp(10px, 2vh, 20px) 0;
             min-height: 24px;
         }
-        #next-btn {
-            display: none;
-            background-color: #28a745;
+
+        /* Landscape mode adjustments */
+        @media (orientation: landscape) and (max-height: 600px) {
+            .game-container {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+                align-items: center;
+            }
+
+            .image-container {
+                grid-row: span 3;
+            }
+
+            .game-info {
+                grid-column: span 2;
+            }
+
+            h1 {
+                margin: 10px 0;
+            }
         }
-        #next-btn:hover {
-            background-color: #218838;
+
+        /* Small devices (phones) */
+        @media (max-width: 480px) {
+            .game-info {
+                flex-direction: column;
+            }
+
+            .timer, .game-progress, .score-display {
+                width: 100%;
+            }
+
+            button {
+                width: min(250px, 90%);
+            }
         }
-        .game-progress {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            font-size: 16px;
-            color: #007acc;
+
+        /* Medium devices (tablets) */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .game-info {
+                justify-content: center;
+                gap: 15px;
+            }
+        }
+
+        /* Large devices (laptops/desktops) */
+        @media (min-width: 769px) {
+            .game-container {
+                padding: 40px;
+            }
+        }
+
+        /* Extra large devices */
+        @media (min-width: 1200px) {
+            .game-container {
+                max-width: 1000px;
+            }
+        }
+
+        /* High DPI screens */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .game-container {
+                box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+            }
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --primary-color: #0a0a14;
+                --secondary-color: #0d1021;
+            }
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="game-progress">Question: <span id="current-question">1</span>/<span id="total-questions">5</span></div>
-    <h1>Programming Word Game</h1>
-    <img id="image" src="" alt="Programming Image">
-    <div class="scrambled-letters" id="scrambled"></div>
-    <input type="text" id="guess" placeholder="Your Guess" maxlength="20">
-    <button id="submit-btn" onclick="checkAnswer()">Submit</button>
-    <div id="result"></div>
-    <div id="loader">Loading next question...</div>
-    <button id="next-btn" onclick="fetchNextQuestion()">Next Question</button>
+    <div class="game-container">
+        <div class="game-info">
+            <div class="timer">Time: <span id="time">00:00</span></div>
+            <div class="game-progress">Question: <span id="current-question">1</span>/<span id="total-questions">5</span></div>
+            <div class="score-display">Score: <span id="score">0</span></div>
+        </div>
+
+        <h1>Programming Word Game</h1>
+        <div class="image-container">
+            <img id="image" src="" alt="Programming Image">
+        </div>
+        <div class="scrambled-letters" id="scrambled"></div>
+        <input type="text" id="guess" placeholder="Your Guess" maxlength="20">
+        <button id="submit-btn" onclick="checkAnswer()">Submit</button>
+        <div id="result"></div>
+        <div id="loader">Loading next question...</div>
+        <button id="next-btn" onclick="fetchNextQuestion()">Next Question</button>
+    </div>
 
     <script>
+        // Global variables
         let gameData = [];
         let questionIndex = 0;
         let totalQuestions = 0;
-        const difficulty = '{{ difficulty }}';  // Get difficulty from Flask
+        let score = 0;
+        let timer;
+        let seconds = 0;
+        let isTransitioning = false;
+        const difficulty = '{{ difficulty }}';
 
+        // Progress functions
         function updateProgress() {
             document.getElementById('current-question').textContent = questionIndex + 1;
             document.getElementById('total-questions').textContent = totalQuestions;
         }
 
+        // Timer functions
+        function updateTimer() {
+            seconds++;
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            document.getElementById('time').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            stopTimer(); // Clear any existing timer
+            seconds = 0;
+            timer = setInterval(updateTimer, 1000);
+        }
+
+        function stopTimer() {
+            if (timer) {
+                clearInterval(timer);
+            }
+        }
+
+        // Score functions
+        function updateScore(points) {
+            score += points;
+            document.getElementById('score').textContent = score;
+            
+            // Update best score in localStorage
+            const currentBest = parseInt(localStorage.getItem('bestScore')) || 0;
+            if (score > currentBest) {
+                localStorage.setItem('bestScore', score);
+            }
+        }
+
+        function calculatePoints() {
+            const timeBonus = Math.max(100 - seconds, 0);
+            const difficultyMultiplier = {
+                'easy': 1,
+                'average': 1.5,
+                'hard': 2
+            }[difficulty];
+            return Math.floor(timeBonus * difficultyMultiplier);
+        }
+
+        // Image loading functions
+        function debugImageLoading(imagePath) {
+            const img = document.getElementById('image');
+            const container = document.querySelector('.image-container');
+            
+            if (!container) {
+                console.error('Image container not found');
+                return;
+            }
+            
+            container.classList.add('loading');
+            console.log('Attempting to load image:', imagePath);
+            
+            img.onload = function() {
+                console.log('✅ Image loaded successfully:', imagePath);
+                container.classList.remove('loading');
+            };
+            
+            img.onerror = function() {
+                console.error('❌ Failed to load image:', imagePath);
+                container.classList.remove('loading');
+                // Set a default image or placeholder
+                img.src = '/static/images/placeholder.jpg';
+            };
+        }
+
+        // Game logic functions
+        function showResult(message, isCorrect) {
+            const result = document.getElementById('result');
+            result.textContent = message;
+            result.style.color = isCorrect ? "#28a745" : "#dc3545";
+            
+            if (isCorrect && !isTransitioning) {
+                const points = calculatePoints();
+                updateScore(points);
+                setTimeout(() => {
+                    fetchNextQuestion();
+                }, 1500); // Auto proceed after 1.5 seconds
+            }
+        }
+
         function checkAnswer() {
+            if (isTransitioning) return;
+            
             const guessInput = document.getElementById('guess');
-            const guess = guessInput.value.trim();
+            const guess = guessInput.value.trim().toUpperCase();
             const correctWord = gameData[questionIndex].correct_word;
 
             if (guess === "") {
@@ -129,8 +340,8 @@
             .then(data => {
                 showResult(data.message, data.correct);
                 if (data.correct) {
-                    document.getElementById('next-btn').style.display = 'block';
                     guessInput.disabled = true;
+                    stopTimer();
                 }
                 submitButton.disabled = false;
             })
@@ -141,33 +352,52 @@
             });
         }
 
-        function showResult(message, isCorrect) {
-            const result = document.getElementById('result');
-            result.textContent = message;
-            result.style.color = isCorrect ? "#28a745" : "#dc3545";
-        }
-
         function fetchNextQuestion() {
+            if (isTransitioning) return;
+            isTransitioning = true;
+
             if (questionIndex >= gameData.length - 1) {
-                alert("Congratulations! You've completed all questions!");
-                window.location.href = '/';
+                // Game completed
+                stopTimer();
+                const gamesPlayed = parseInt(localStorage.getItem('gamesPlayed') || 0) + 1;
+                localStorage.setItem('gamesPlayed', gamesPlayed);
+                
+                setTimeout(() => {
+                    alert(`Game Complete!\nFinal Score: ${score}`);
+                    window.location.href = '/';
+                }, 500);
                 return;
             }
 
             questionIndex++;
             updateProgress();
             
-            const currentQuestion = gameData[questionIndex];
-            document.getElementById('image').src = `/static/images/${currentQuestion.image}`;
-            document.getElementById('scrambled').textContent = currentQuestion.scrambled;
+            const container = document.querySelector('.game-container');
+            if (container) {
+                container.style.opacity = '0';
+            }
             
-            const guessInput = document.getElementById('guess');
-            guessInput.value = '';
-            guessInput.disabled = false;
-            guessInput.focus();
-            
-            document.getElementById('result').textContent = '';
-            document.getElementById('next-btn').style.display = 'none';
+            setTimeout(() => {
+                const currentQuestion = gameData[questionIndex];
+                const imagePath = `/static/images/${currentQuestion.image}`;
+                debugImageLoading(imagePath);
+                document.getElementById('image').src = imagePath;
+                document.getElementById('scrambled').textContent = currentQuestion.scrambled;
+                
+                const guessInput = document.getElementById('guess');
+                guessInput.value = '';
+                guessInput.disabled = false;
+                guessInput.focus();
+                
+                document.getElementById('result').textContent = '';
+                
+                if (container) {
+                    container.style.opacity = '1';
+                }
+                
+                startTimer();
+                isTransitioning = false;
+            }, 500);
         }
 
         function startGame() {
@@ -185,13 +415,17 @@
                 gameData = data;
                 totalQuestions = data.length;
                 questionIndex = 0;
+                score = 0;
                 updateProgress();
                 
                 const currentQuestion = gameData[0];
-                document.getElementById('image').src = `/static/images/${currentQuestion.image}`;
+                const imagePath = `/static/images/${currentQuestion.image}`;
+                debugImageLoading(imagePath);
+                document.getElementById('image').src = imagePath;
                 document.getElementById('scrambled').textContent = currentQuestion.scrambled;
                 
                 document.getElementById('guess').focus();
+                startTimer();
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -199,7 +433,15 @@
             });
         }
 
-        // Handle Enter key press
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.querySelector('.game-container');
+            if (container) {
+                container.style.transition = 'opacity 0.5s ease';
+            }
+            startGame();
+        });
+
         document.getElementById('guess').addEventListener('keypress', function(event) {
             if (event.key === 'Enter') {
                 event.preventDefault();
@@ -208,9 +450,6 @@
                 }
             }
         });
-
-        // Start the game when page loads
-        window.onload = startGame;
     </script>
 </body>
 </html>

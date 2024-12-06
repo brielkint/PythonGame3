@@ -1,8 +1,8 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, url_for
 import random
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 
 # Game data organized by difficulty
 game_data = {
@@ -29,6 +29,21 @@ game_data = {
     ]
 }
 
+def verify_images():
+    """Verify all images exist in static/images directory"""
+    missing_images = []
+    for difficulty in game_data:
+        for item in game_data[difficulty]:
+            image_path = os.path.join('static', 'images', item['image'])
+            if not os.path.exists(image_path):
+                missing_images.append(item['image'])
+    
+    if missing_images:
+        print("Warning: Missing images:", missing_images)
+
+# Verify images on startup
+verify_images()
+
 @app.route('/')
 def homepage():
     """Homepage with difficulty selection."""
@@ -40,6 +55,11 @@ def game():
     if request.method == 'POST':
         difficulty = request.json.get('difficulty', 'easy')
         questions = random.sample(game_data[difficulty], len(game_data[difficulty]))
+        
+        # Debug print
+        print(f"Serving images for difficulty {difficulty}:")
+        for q in questions:
+            print(f"- {q['image']}")
         
         questions_data = []
         for question in questions:
