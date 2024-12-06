@@ -1,18 +1,25 @@
-from flask import Flask, render_template, request, jsonify, url_for
+from flask import Flask, render_template, request, jsonify, url_for, send_from_directory
 import random
 import os
 from pathlib import Path
 
-app = Flask(__name__, static_url_path='/static')
+# Update template and static folders configuration
+template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'templates'))
+static_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'public', 'static'))
+
+app = Flask(__name__, 
+    template_folder=template_dir,
+    static_folder=static_dir,
+    static_url_path='/static')
 
 # Game data organized by difficulty with updated image paths
 game_data = {
     'easy': [
-        {"image": "/static/images/python_logo.jpg", "word": "PYTHON"},
-        {"image": "/static/images/html_logo.png", "word": "HTML"},
-        {"image": "/static/images/css_code_snippet.jpg", "word": "CSS"},
-        {"image": "/static/images/binary_code.jpg", "word": "BINARY"},
-        {"image": "/static/images/function_diagram.jpg", "word": "FUNCTION"},
+        {"image": "static/images/python_logo.jpg", "word": "PYTHON"},
+        {"image": "static/images/html_logo.png", "word": "HTML"},
+        {"image": "static/images/css_code_snippet.jpg", "word": "CSS"},
+        {"image": "static/images/binary_code.jpg", "word": "BINARY"},
+        {"image": "static/images/function_diagram.jpg", "word": "FUNCTION"},
     ],
     'average': [
         {"image": "/static/images/javascript_logo.jpg", "word": "JAVASCRIPT"},
@@ -111,6 +118,11 @@ def check():
 
     except Exception as e:
         return jsonify({"correct": False, "message": str(e)}), 500
+
+# Add a route for serving static files
+@app.route('/static/<path:path>')
+def serve_static(path):
+    return send_from_directory(static_dir, path)
 
 if __name__ == '__main__':
     app.run() 
