@@ -1,0 +1,216 @@
+Programming Word Game Documentation
+================================
+
+Overview
+--------
+The Programming Word Game is an interactive web-based game that helps users learn programming-related terms through a word unscrambling puzzle. The game features multiple difficulty levels and a scoring system.
+
+Project Structure
+---------------
+/project_root
+├── static/
+│   └── images/              # Contains all game images
+├── templates/
+│   ├── homepage.html        # Landing page with difficulty selection
+│   └── index.html           # Main game interface
+├── app.py                   # Flask backend application
+├── verify_images.py         # Image verification utility
+├── requirements.txt         # Project dependencies
+└── note.txt                # Game answers reference
+
+Features
+--------
+1. Multiple Difficulty Levels
+   - Easy: Basic programming concepts
+   - Average: Intermediate programming terms
+   - Hard: Advanced programming concepts
+
+2. Scoring System
+   - Time-based scoring
+   - Difficulty multipliers:
+     * Easy: 1x multiplier
+     * Average: 1.5x multiplier
+     * Hard: 2x multiplier
+   - Points calculation: (100 - seconds_taken) × difficulty_multiplier
+
+3. Progress Tracking
+   - Games played counter
+   - Best score tracking
+   - Local storage for persistence
+
+Technical Implementation
+----------------------
+
+1. Backend (app.py)
+   - Framework: Flask
+   - Main Routes:
+     * / : Homepage with difficulty selection
+     * /game : Game interface and question generation
+     * /check : Answer verification endpoint
+   
+   - Game Data Structure:
+     * Organized by difficulty levels
+     * Each question contains:
+       - Image reference
+       - Correct word
+       - Scrambled version
+
+2. Frontend Components
+
+   a) Homepage (homepage.html)
+      - Modern UI with glassmorphism effects
+      - 3D card animations
+      - Responsive design
+      - Progress statistics display
+
+   b) Game Interface (index.html)
+      - Timer implementation
+      - Score tracking
+      - Image display
+      - Answer input
+      - Auto-progression system
+
+3. Game Mechanics
+
+   a) Question Generation:
+      - Random selection from difficulty pool
+      - Word scrambling algorithm
+      - Image-word pairing
+
+   b) Answer Checking:
+      - Case-insensitive comparison
+      - Immediate feedback
+      - Score calculation
+      - Progress tracking
+
+   c) Game Flow:
+      1. User selects difficulty
+      2. Questions are randomly selected
+      3. Words are scrambled
+      4. User inputs answer
+      5. System checks answer
+      6. Auto-proceeds on correct answer
+      7. Updates score and progress
+      8. Saves statistics
+
+Responsive Design
+---------------
+- Mobile-first approach
+- Breakpoints:
+  * Small devices: max-width 480px
+  * Tablets: 481px - 768px
+  * Laptops: 769px - 1024px
+  * Desktops: 1025px+
+  * Ultra HD: 2560px+
+
+User Interface Features
+---------------------
+1. Homepage:
+   - Animated background
+   - 3D card effects
+   - Hover animations
+   - Difficulty level cards
+   - Progress statistics
+
+2. Game Screen:
+   - Timer display
+   - Progress indicator
+   - Score display
+   - Image display
+   - Scrambled letters
+   - Input field
+   - Result feedback
+
+Local Storage
+------------
+Stores:
+- Games played count
+- Best score achieved
+- Persistent across sessions
+
+Dependencies
+-----------
+- Flask==2.0.1
+- Werkzeug==2.0.1
+
+Image Requirements
+----------------
+- Format: JPG/PNG
+- Location: static/images/
+- Naming convention: lowercase with underscores
+- Required images:
+  * python_logo.jpg
+  * html_logo.png
+  * css_code_snippet.jpg
+  * [... all other images]
+
+Setup Instructions
+----------------
+1. Install dependencies:
+   ```
+   pip install -r requirements.txt
+   ```
+
+2. Verify images:
+   ```
+   python verify_images.py
+   ```
+
+3. Run the application:
+   ```
+   python app.py
+   ```
+
+4. Access the game:
+   ```
+   http://localhost:5000
+   ```
+
+Maintenance
+----------
+1. Adding New Questions:
+   - Add image to static/images/
+   - Update game_data in app.py
+   - Update note.txt with new answers
+   - Run verify_images.py to confirm
+
+2. Modifying Difficulty:
+   - Adjust difficulty multipliers in index.html
+   - Update game_data in app.py
+
+3. Updating UI:
+   - Modify CSS in respective HTML files
+   - Test responsiveness across devices
+
+Troubleshooting
+--------------
+1. Images not displaying:
+   - Run verify_images.py
+   - Check file permissions
+   - Verify file names and paths
+
+2. Score not saving:
+   - Check localStorage in browser
+   - Clear browser cache if needed
+
+3. Performance issues:
+   - Optimize image sizes
+   - Check browser console for errors
+   - Verify server logs
+
+Future Enhancements
+-----------------
+1. Additional features to consider:
+   - User accounts
+   - Global leaderboard
+   - More difficulty levels
+   - Hint system
+   - Achievement system
+   - Sound effects
+   - Multiplayer mode
+
+2. Technical improvements:
+   - Database integration
+   - API optimization
+   - Cache implementation
+   - Advanced analytics
