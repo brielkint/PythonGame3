@@ -15,25 +15,25 @@ app = Flask(__name__,
 # Update game data with correct image paths
 game_data = {
     'easy': [
-        {"image": "static/images/python_logo.jpg", "word": "PYTHON"},
-        {"image": "static/images/html_logo.png", "word": "HTML"},
-        {"image": "static/images/css_code_snippet.jpg", "word": "CSS"},
-        {"image": "static/images/binary_code.jpg", "word": "BINARY"},
-        {"image": "static/images/function_diagram.jpg", "word": "FUNCTION"},
+        {"image": "/static/images/python_logo.jpg", "word": "PYTHON"},
+        {"image": "/static/images/html_logo.png", "word": "HTML"},
+        {"image": "/static/images/css_code_snippet.jpg", "word": "CSS"},
+        {"image": "/static/images/binary_code.jpg", "word": "BINARY"},
+        {"image": "/static/images/function_diagram.jpg", "word": "FUNCTION"},
     ],
     'average': [
-        {"image": "static/images/javascript_logo.jpg", "word": "JAVASCRIPT"},
-        {"image": "static/images/database_diagram.jpg", "word": "DATABASE"},
-        {"image": "static/images/algorithm_flow.jpg", "word": "ALGORITHM"},
-        {"image": "static/images/react_logo.jpg", "word": "REACT"},
-        {"image": "static/images/docker_logo.jpg", "word": "DOCKER"},
+        {"image": "/static/images/javascript_logo.jpg", "word": "JAVASCRIPT"},
+        {"image": "/static/images/database_diagram.jpg", "word": "DATABASE"},
+        {"image": "/static/images/algorithm_flow.jpg", "word": "ALGORITHM"},
+        {"image": "/static/images/react_logo.jpg", "word": "REACT"},
+        {"image": "/static/images/docker_logo.jpg", "word": "DOCKER"},
     ],
     'hard': [
-        {"image": "static/images/kubernetes_arch.jpg", "word": "KUBERNETES"},
-        {"image": "static/images/microservices.jpg", "word": "MICROSERVICES"},
-        {"image": "static/images/blockchain.jpg", "word": "BLOCKCHAIN"},
-        {"image": "static/images/machine_learning.jpg", "word": "MACHINELEARNING"},
-        {"image": "static/images/cryptography.jpg", "word": "CRYPTOGRAPHY"},
+        {"image": "/static/images/kubernetes_arch.jpg", "word": "KUBERNETES"},
+        {"image": "/static/images/microservices.jpg", "word": "MICROSERVICES"},
+        {"image": "/static/images/blockchain.jpg", "word": "BLOCKCHAIN"},
+        {"image": "/static/images/machine_learning.jpg", "word": "MACHINELEARNING"},
+        {"image": "/static/images/cryptography.jpg", "word": "CRYPTOGRAPHY"},
     ]
 }
 
@@ -123,6 +123,21 @@ def check():
 @app.route('/static/<path:filename>')
 def serve_static(filename):
     return send_from_directory(static_dir, filename)
+
+@app.route('/debug-images')
+def debug_images():
+    """Debug endpoint to check image paths"""
+    image_paths = []
+    for difficulty in game_data:
+        for item in game_data[difficulty]:
+            full_path = os.path.join(static_dir, item['image'].lstrip('/'))
+            exists = os.path.exists(full_path)
+            image_paths.append({
+                'path': item['image'],
+                'full_path': full_path,
+                'exists': exists
+            })
+    return jsonify(image_paths)
 
 if __name__ == '__main__':
     app.run() 
