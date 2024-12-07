@@ -101,7 +101,23 @@ class GameUI {
 
     updateUI() {
         const question = this.game.getCurrentQuestion();
-        document.getElementById('image').src = question.image;
+        const img = document.getElementById('image');
+        
+        console.log('Loading image:', question.image);
+        
+        img.onerror = () => {
+            console.error('Failed to load image:', question.image);
+            // Try alternative path
+            const altPath = question.image.replace('/PythonGame/', '/');
+            console.log('Trying alternative path:', altPath);
+            img.src = altPath;
+        };
+        
+        img.onload = () => {
+            console.log('Successfully loaded image:', question.image);
+        };
+        
+        img.src = question.image;
         document.getElementById('scrambled').textContent = this.game.shuffleWord(question.word);
         document.getElementById('current-question').textContent = this.game.currentIndex + 1;
         document.getElementById('total-questions').textContent = this.game.questions.length;
