@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programming Word Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Programming Word Game</h1>
+        <p>Challenge yourself with programming concepts! Choose your difficulty level and start unscrambling words in this immersive coding puzzle experience.</p>
+        
+        <div class="difficulty-buttons">
+            <div class="difficulty-card" onclick="startGame('easy')">
+                <div class="card-content">
+                    <div class="difficulty-icon">🌱</div>
+                    <h3>Easy Mode</h3>
+                    <p class="card-description">Perfect for beginners starting their coding journey</p>
+                    <button class="easy">Start Easy</button>
+                </div>
+            </div>
+
+            <div class="difficulty-card" onclick="startGame('average')">
+                <div class="card-content">
+                    <div class="difficulty-icon">⚡</div>
+                    <h3>Average Mode</h3>
+                    <p class="card-description">For developers with some experience</p>
+                    <button class="average">Start Average</button>
+                </div>
+            </div>
+
+            <div class="difficulty-card" onclick="startGame('hard')">
+                <div class="card-content">
+                    <div class="difficulty-icon">🔥</div>
+                    <h3>Hard Mode</h3>
+                    <p class="card-description">Challenge yourself with advanced concepts</p>
+                    <button class="hard">Start Hard</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats">
+            <h3>Your Progress</h3>
+            <p>Games Played: <span id="gamesPlayed">0</span> | Best Score: <span id="bestScore">0</span></p>
+        </div>
+    </div>
+
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/game.js"></script>
+    <script>
+        function startGame(difficulty) {
+            localStorage.setItem('selectedDifficulty', difficulty);
+            window.location.href = 'game.html';
+        }
+
+        // Load and display stats with animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const gamesPlayed = localStorage.getItem('gamesPlayed') || 0;
+            const bestScore = localStorage.getItem('bestScore') || 0;
+            
+            const animateNumber = (element, final, duration = 1000) => {
+                let start = 0;
+                const increment = final / (duration / 16);
+                const timer = setInterval(() => {
+                    start += increment;
+                    element.textContent = Math.floor(start);
+                    if (start >= final) {
+                        element.textContent = final;
+                        clearInterval(timer);
+                    }
+                }, 16);
+            };
+            
+            animateNumber(document.getElementById('gamesPlayed'), gamesPlayed);
+            animateNumber(document.getElementById('bestScore'), bestScore);
+        });
+    </script>
+</body>
+</html> 
