@@ -3,7 +3,7 @@ import random
 import os
 from pathlib import Path
 
-# Update template and static folders configuration
+# Update paths for Vercel
 template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'templates'))
 static_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'public'))
 
@@ -12,7 +12,7 @@ app = Flask(__name__,
     static_folder=static_dir,
     static_url_path='')
 
-# Update game data with correct image paths
+# Update image paths with leading slash
 game_data = {
     'easy': [
         {"image": "/static/images/python_logo.jpg", "word": "PYTHON"},
@@ -135,9 +135,21 @@ def debug_images():
             image_paths.append({
                 'path': item['image'],
                 'full_path': full_path,
-                'exists': exists
+                'exists': exists,
+                'static_dir': static_dir
             })
     return jsonify(image_paths)
+
+@app.route('/health')
+def health_check():
+    """Health check endpoint"""
+    return jsonify({
+        "status": "healthy",
+        "flask_version": Flask.__version__,
+        "static_folder": app.static_folder,
+        "template_folder": app.template_folder,
+        "static_url_path": app.static_url_path
+    })
 
 if __name__ == '__main__':
     app.run() 
