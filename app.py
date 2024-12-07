@@ -2,7 +2,8 @@ from flask import Flask, render_template, request, jsonify, url_for
 import random
 import os
 
-app = Flask(__name__, static_url_path='/static')
+# Adjust the app configuration for static folder if needed
+app = Flask(__name__, static_folder='public/static', static_url_path='/static')
 
 # Game data organized by difficulty
 game_data = {
@@ -30,11 +31,12 @@ game_data = {
 }
 
 def verify_images():
-    """Verify all images exist in static/images directory"""
+    """Verify all images exist in public/static/images directory"""
     missing_images = []
     for difficulty in game_data:
         for item in game_data[difficulty]:
-            image_path = os.path.join('static', 'images', item['image'])
+            # Adjust path for public/static/images
+            image_path = os.path.join('public', 'static', 'images', item['image'])
             if not os.path.exists(image_path):
                 missing_images.append(item['image'])
     

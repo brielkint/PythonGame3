@@ -2,8 +2,9 @@
 function getImagePath(imageName) {
     // Check if we're on GitHub Pages
     const isGitHubPages = window.location.hostname.includes('github.io');
+    // Update path to match your public/static/images structure
     const basePath = isGitHubPages ? '/PythonGame' : '';
-    return `${basePath}/assets/images/${imageName}`;
+    return `${basePath}/public/static/images/${imageName}`;
 }
 
 const gameData = {
