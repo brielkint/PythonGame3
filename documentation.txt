@@ -214,3 +214,44 @@ Future Enhancements
    - API optimization
    - Cache implementation
    - Advanced analytics
+
+
+
+Backend: Flask
+The backend uses Flask, a lightweight Python framework, to manage server-side logic:
+
+Routing:
+
+/: Serves the homepage (homepage.html) for selecting difficulty.
+/game: Generates questions and sends them to the frontend.
+/check: Verifies answers submitted by the user.
+Game Logic:
+
+Stores questions in a structured format categorized by difficulty.
+Implements word scrambling and score calculation based on time and difficulty.
+Static Assets:
+
+Serves images from the static/images directory.
+Tools:
+
+Uses Python utilities (verify_images.py) to validate game assets.
+
+
+Frontend: HTML, CSS, JavaScript
+The frontend is built with static files for user interaction:
+
+HTML:
+
+homepage.html: Displays difficulty selection with animations and progress stats.
+index.html: Main game interface with a timer, image display, and input field.
+CSS:
+
+Implements a modern glassmorphism design.
+Fully responsive for mobile, tablet, and desktop devices.
+JavaScript:
+
+Handles interactivity:
+Timer countdown.
+Dynamic question fetching via AJAX.
+LocalStorage for saving scores and progress.
+Provides instant feedback for correct or incorrect answers.
